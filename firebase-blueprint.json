@@ -1,0 +1,167 @@
+{
+  "entities": {
+    "RSVPEntity": {
+      "title": "RSVPEntity",
+      "description": "An RSVP response sent by the boyfriend or guests",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the person replying"
+        },
+        "attending": {
+          "type": "boolean",
+          "description": "Whether they are coming"
+        },
+        "dietPreference": {
+          "type": "string",
+          "description": "Their food preferences"
+        },
+        "secretMessage": {
+          "type": "string",
+          "description": "Any additional secret love message or note"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The timestamp when the RSVP was filed"
+        }
+      },
+      "required": ["name", "attending", "dietPreference", "createdAt"]
+    },
+    "GuestbookEntity": {
+      "title": "GuestbookEntity",
+      "description": "A registry entry signed with love",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Signature name"
+        },
+        "message": {
+          "type": "string",
+          "description": "The lovely text comment"
+        },
+        "avatar": {
+          "type": "string",
+          "description": "Selected cute emoji character"
+        },
+        "stamp": {
+          "type": "string",
+          "description": "Sweet sticker seal chosen"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp"
+        }
+      },
+      "required": ["name", "message", "avatar", "stamp", "createdAt"]
+    },
+    "PhotoEntity": {
+      "title": "PhotoEntity",
+      "description": "A custom polaroid photo moment uploaded or linked",
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "description": "Image Unsplash source URL"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the memory"
+        },
+        "date": {
+          "type": "string",
+          "description": "Dating notation of when the moment was captured"
+        },
+        "caption": {
+          "type": "string",
+          "description": "Handwritten styled caption"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation ISO date"
+        }
+      },
+      "required": ["url", "title", "createdAt"]
+    },
+    "SettingsEntity": {
+      "title": "SettingsEntity",
+      "description": "Core custom configuration for the invitation",
+      "type": "object",
+      "properties": {
+        "senderName": {
+          "type": "string"
+        },
+        "receiverName": {
+          "type": "string"
+        },
+        "anniversaryDate": {
+          "type": "string"
+        },
+        "loveLetter": {
+          "type": "string"
+        },
+        "restaurantName": {
+          "type": "string"
+        },
+        "restaurantAddress": {
+          "type": "string"
+        },
+        "dinnerDate": {
+          "type": "string"
+        },
+        "dinnerTime": {
+          "type": "string"
+        },
+        "dressCode": {
+          "type": "string"
+        },
+        "reservationName": {
+          "type": "string"
+        },
+        "mapEmbedUrl": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "senderName",
+        "receiverName",
+        "anniversaryDate",
+        "loveLetter",
+        "restaurantName",
+        "restaurantAddress",
+        "dinnerDate",
+        "dinnerTime",
+        "dressCode",
+        "reservationName",
+        "mapEmbedUrl",
+        "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/rsvps/{rsvpId}": {
+      "schema": "RSVPEntity",
+      "description": "List of responses received from dates"
+    },
+    "/guestbook/{entryId}": {
+      "schema": "GuestbookEntity",
+      "description": "Messages posted to the shared romantic board"
+    },
+    "/moments/{momentId}": {
+      "schema": "PhotoEntity",
+      "description": "Memory lane photo cards"
+    },
+    "/settings/{settingsId}": {
+      "schema": "SettingsEntity",
+      "description": "Centralized single document specifying global copy"
+    }
+  }
+}

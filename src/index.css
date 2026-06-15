@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Sacramento&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@theme {
+  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-display: "Playfair Display", "Times New Roman", serif;
+  --font-sans: "Inter", sans-serif;
+  --font-script: "Sacramento", cursive;
+  
+  --color-romantic-50: #fff5f6;
+  --color-romantic-100: #ffebeb;
+  --color-romantic-200: #ffd6d9;
+  --color-romantic-300: #ffa3a9;
+  --color-romantic-400: #f8707a;
+  --color-romantic-500: #ec4855;
+  --color-romantic-600: #da2736;
+  --color-romantic-700: #b81c29;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(3deg);
+  }
+}
+
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.1);
+  }
+  40% {
+    transform: scale(1.05);
+  }
+  60% {
+    transform: scale(1.15);
+  }
+}
+
+.float-slow {
+  animation: float 6s ease-in-out infinite;
+}
+
+.heartbeat-sync {
+  animation: heartbeat 2s ease-in-out infinite;
+}
+
+/* Custom scrollbar to keep it romantic and thin */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #fff5f6;
+}
+::-webkit-scrollbar-thumb {
+  background: #ffa3a9;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #f8707a;
+}

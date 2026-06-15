@@ -1,0 +1,104 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 1. Global safety net default-deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // --- COLLECTION: RSVPS ---
+    match /rsvps/{rsvpId} {
+      allow read: if true;
+      allow create: if isValidId(rsvpId) && isValidRSVP(request.resource.data);
+      allow update: if isValidId(rsvpId) && isValidRSVP(request.resource.data) && (
+        request.resource.data.name == resource.data.name
+      );
+      allow delete: if isSignedIn();
+    }
+
+    function isValidRSVP(data) {
+      return data.keys().hasAll(['name', 'attending', 'dietPreference', 'secretMessage', 'createdAt'])
+        && data.keys().size() == 5
+        && data.name is string && data.name.size() > 0 && data.name.size() <= 200
+        && data.attending is bool
+        && data.dietPreference is string && data.dietPreference.size() <= 500
+        && data.secretMessage is string && data.secretMessage.size() <= 1000
+        && data.createdAt is string && data.createdAt.size() <= 128;
+    }
+
+    // --- COLLECTION: GUESTBOOK ---
+    match /guestbook/{entryId} {
+      allow read: if true;
+      allow create: if isValidId(entryId) && isValidGuestbook(request.resource.data);
+      allow update: if false; // Guestbook posts are immutable once written!
+      allow delete: if isSignedIn();
+    }
+
+    function isValidGuestbook(data) {
+      return data.keys().hasAll(['name', 'message', 'avatar', 'stamp', 'createdAt'])
+        && data.keys().size() == 5
+        && data.name is string && data.name.size() > 0 && data.name.size() <= 200
+        && data.message is string && data.message.size() > 0 && data.message.size() <= 2000
+        && data.avatar is string && data.avatar.size() <= 50
+        && data.stamp is string && data.stamp.size() <= 100
+        && data.createdAt is string && data.createdAt.size() <= 128;
+    }
+
+    // --- COLLECTION: MOMENTS ---
+    match /moments/{momentId} {
+      allow read: if true;
+      allow create: if isValidId(momentId) && isValidMoment(request.resource.data);
+      allow update: if isValidId(momentId) && isValidMoment(request.resource.data);
+      allow delete: if true; // Let them manage custom photo moments
+    }
+
+    function isValidMoment(data) {
+      return data.keys().hasAll(['id', 'url', 'title', 'date', 'caption'])
+        && data.keys().size() == 5
+        && data.id is string && data.id.size() <= 128
+        && data.url is string && data.url.size() <= 2000
+        && data.title is string && data.title.size() > 0 && data.title.size() <= 200
+        && data.date is string && data.date.size() <= 100
+        && data.caption is string && data.caption.size() <= 1000;
+    }
+
+    // --- COLLECTION: SETTINGS ---
+    match /settings/{settingsId} {
+      allow read: if true;
+      allow create: if isValidId(settingsId) && isValidSettings(request.resource.data);
+      allow update: if isValidId(settingsId) && isValidSettings(request.resource.data);
+      allow delete: if isSignedIn();
+    }
+
+    function isValidSettings(data) {
+      return data.keys().hasAll([
+        'senderName', 'receiverName', 'anniversaryDate', 'loveLetter',
+        'restaurantName', 'restaurantAddress', 'dinnerDate', 'dinnerTime',
+        'dressCode', 'reservationName', 'mapEmbedUrl', 'updatedAt'
+      ])
+        && data.keys().size() == 12
+        && data.senderName is string && data.senderName.size() <= 200
+        && data.receiverName is string && data.receiverName.size() <= 200
+        && data.anniversaryDate is string && data.anniversaryDate.size() <= 128
+        && data.loveLetter is string && data.loveLetter.size() <= 10000
+        && data.restaurantName is string && data.restaurantName.size() <= 300
+        && data.restaurantAddress is string && data.restaurantAddress.size() <= 1000
+        && data.dinnerDate is string && data.dinnerDate.size() <= 128
+        && data.dinnerTime is string && data.dinnerTime.size() <= 128
+        && data.dressCode is string && data.dressCode.size() <= 300
+        && data.reservationName is string && data.reservationName.size() <= 300
+        && data.mapEmbedUrl is string && data.mapEmbedUrl.size() <= 2000
+        && data.updatedAt is string && data.updatedAt.size() <= 128;
+    }
+  }
+}
